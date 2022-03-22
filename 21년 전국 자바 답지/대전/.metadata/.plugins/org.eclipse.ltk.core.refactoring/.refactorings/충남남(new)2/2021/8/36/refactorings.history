@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Rename local variable &apos;dep&apos; in &apos;view.Map.getBeepath(...)&apos; to &apos;arrv&apos;&#x0D;&#x0A;- Original project: &apos;충남남(new)2&apos;&#x0D;&#x0A;- Original element: &apos;view.Map.getBeepath(int).dep&apos;&#x0D;&#x0A;- Renamed element: &apos;dep&apos;&#x0D;&#x0A;- Update references to refactored element" description="Rename local variable &apos;dep&apos;" id="org.eclipse.jdt.ui.rename.local.variable" input="/src&lt;view{Map.java[Map~getBeepath~I@dep!9569!9575!9573!9575!I!0!true" name="arrv" references="true" stamp="1630212778178" version="1.0"/>
-</session>

@@ -1,5 +1,0 @@
-package view;
-
-public class Ride_apply_edit extends BaseFrame {
-
-}

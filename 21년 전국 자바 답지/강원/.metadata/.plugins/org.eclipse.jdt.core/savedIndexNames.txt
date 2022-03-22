@@ -1,5 +1,0 @@
-INDEX VERSION 1.131+F:\java\Eclipse_Projects\21년 전국 자바 답지\강원\.metadata\.plugins\org.eclipse.jdt.core
-1012223955.index
-2713109935.index
-1865797976.index
-3250904730.index

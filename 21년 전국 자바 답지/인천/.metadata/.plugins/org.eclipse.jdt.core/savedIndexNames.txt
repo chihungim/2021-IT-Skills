@@ -1,3 +1,0 @@
-INDEX VERSION 1.131+F:\java\Eclipse-projects\21년 전국 자바 답지\인천\.metadata\.plugins\org.eclipse.jdt.core
-475927746.index
-789344348.index

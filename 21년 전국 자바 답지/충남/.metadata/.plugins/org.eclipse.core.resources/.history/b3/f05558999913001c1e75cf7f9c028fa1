@@ -1,7 +1,0 @@
-package view;
-
-public class MenuManage extends BaseDialog {
-	public MenuManage() {
-
-	}
-}

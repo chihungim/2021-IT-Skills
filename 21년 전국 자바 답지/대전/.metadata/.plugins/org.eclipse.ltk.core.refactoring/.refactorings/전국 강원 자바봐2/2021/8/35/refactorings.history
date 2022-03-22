@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Rename compilation unit &apos;view.userInfo.java&apos; to &apos;UserInfo.java&apos;&#x0D;&#x0A;- Original project: &apos;전국 강원 자바봐2&apos;&#x0D;&#x0A;- Original element: &apos;view.userInfo.java&apos;&#x0D;&#x0A;- Renamed element: &apos;view.UserInfo.java&apos;" description="Rename compilation unit &apos;userInfo.java&apos;" flags="2" id="org.eclipse.jdt.ui.rename.compilationunit" input="/src&lt;view{userInfo.java" name="UserInfo.java" references="false" stamp="1630063576113" version="1.0"/>
-</session>
