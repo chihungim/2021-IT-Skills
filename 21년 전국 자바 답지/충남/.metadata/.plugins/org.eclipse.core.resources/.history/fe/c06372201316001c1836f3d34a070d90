@@ -1,0 +1,39 @@
+package view;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import javax.swing.JFrame;
+
+import db.DB;
+
+public class BaseFrame extends JFrame {
+	static Connection con = DB.con;
+	static Statement stmt = db.DB.stmt;
+
+	static {
+		try {
+			stmt.execute("use 2021Àü±¹");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	void execute(String sql) {
+		try {
+			stmt.execute(sql);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public BaseFrame(String title, int w, int h) {
+		super(title);
+		setSize(w, h);
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+	}
+}

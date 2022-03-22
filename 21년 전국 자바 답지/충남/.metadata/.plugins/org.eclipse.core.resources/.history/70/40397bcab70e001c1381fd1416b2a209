@@ -1,0 +1,25 @@
+package view;
+
+public class Login extends BaseFrame {
+
+	public Login() {
+		super("·Î±×ÀÎ", 400, 200);
+		ui();
+		event();
+		setVisible(true);
+	}
+
+	private void event() {
+		// TODO Auto-generated method stub
+
+	}
+
+	private void ui() {
+		// TODO Auto-generated method stub
+
+	}
+
+	public static void main(String[] args) {
+		new Login();
+	}
+}

@@ -1,0 +1,9 @@
+package view;
+
+public class Ride_apply_edit extends BaseFrame {
+
+	static final int EDIT = 0, APPLY = 1;
+
+	public Ride_apply_edit(int mode, String title) {
+	}
+}

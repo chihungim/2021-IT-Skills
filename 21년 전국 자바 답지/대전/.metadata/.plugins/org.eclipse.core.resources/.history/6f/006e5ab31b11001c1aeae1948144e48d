@@ -1,0 +1,80 @@
+package view;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.util.HashSet;
+
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+
+public class SearchPage extends BasePage {
+	JScrollPane scr1, scr2;
+	JScrollPane scr;
+	JPanel scr_p = new JPanel(), orderPanel;
+	JTextField txt;
+	JCheckBox evntChk = new JCheckBox();
+	JComboBox<String> c_combo = new JComboBox<>(), s_combo = new JComboBox<>();
+	String cap[] = "영업점명,카테고리,행사 여부".split(",");
+	HashSet<Integer> idSet = new HashSet<>();
+	int cnt;
+
+	public SearchPage() {
+		ui();
+	}
+
+	void ui() {
+		add(n = new JPanel(new GridLayout(0, 1, 0, 0)), "North");
+		var n_f = new JPanel(new BorderLayout());
+		n_f.add(txt = new JTextField());
+		n_f.add(sz(btn("<html>$#x1F50D", a -> {
+			cnt = 0;
+			scr.getVerticalScrollBar().setValue(0);
+			search();
+			c.removeAll();
+		}), 40, 1), "East");
+
+		n.add(sz(n_f, 40, 1));
+		var n_l = new JPanel(new GridLayout(1, 0, 5, 5));
+		n.add(n_l);
+		c_combo.setBackground(Color.WHITE);
+		s_combo.setBackground(Color.WHITE);
+
+		for (int i = 0; i < cap.length; i++) {
+			var tmp = new JPanel();
+			tmp.add(sz(new JLabel(cap[i]), 60, 25));
+			if (i == 0) {
+				tmp.add(s_combo);
+			} else if (i == 1) {
+				tmp.add(c_combo);
+			} else {
+				tmp.add(evntChk);
+				evntChk.setOpaque(false);
+			}
+			tmp.setOpaque(false);
+			n_l.add(tmp);
+		}
+
+		add(scr = scr1 = new JScrollPane(c = new JPanel(new GridLayout(0, 3, 5, 5))));
+		add(scr_p = new JPanel(new BorderLayout()), "East");
+		scr_p.add(lbl("장바구니", 0, 20), "North");
+		scr_p.add(scr2 = new JScrollPane(orderPanel = new JPanel(new FlowLayout(0))));
+		scr_p.add(sz(btn("구매하기", a -> {
+			if (idSet.size() == 0) {
+				eMsg("장바구니가 비어있습니다.");
+				return;
+			}
+		}), 1, 25));
+
+		sz(scr2, 230, 25);
+		setBorder(scr2, 0, 10, 0, 0);
+	}
+
+	void search() {
+
+	}
+}

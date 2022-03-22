@@ -1,0 +1,46 @@
+package view;
+
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+public class Register extends BaseFrame {
+
+	String cap[] = "이름,ID,Pw,키,생년월일".split(",");
+
+	JTextField txt[] = { new JTextField(), new JTextField(), new JTextField(), new JTextField(), new JTextField() };
+
+	public Register() {
+		super("회원가입", 300, 400);
+		ui();
+		setVisible(true);
+	}
+
+	private void ui() {
+		var c = new JPanel(new GridLayout(0, 1, 10, 10));
+		var s = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		
+		add(c);
+		add(s, "South");
+
+		for (int i = 0; i < cap.length; i++) {
+			var tmp = new JPanel(new BorderLayout(5, 5));
+			tmp.add(sz(lbl(cap[i] + ":", JLabel.LEFT, 20), 90, 20), "West");
+			tmp.add(txt[i]);
+			c.add(tmp);
+		}
+
+	}
+
+	void btn_event() {
+
+	}
+
+	public static void main(String[] args) {
+		new Register();
+	}
+}

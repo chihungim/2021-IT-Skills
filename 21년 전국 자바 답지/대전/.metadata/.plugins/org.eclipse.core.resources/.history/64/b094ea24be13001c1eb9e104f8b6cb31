@@ -1,0 +1,77 @@
+package db;
+
+import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class DB {
+	public static Connection con;
+	public static Statement stmt;
+
+	static {
+		try {
+			con = DriverManager.getConnection(
+					"jdbc:mysql://localhost?serverTimezone=UTC&allowPublicKeyRetrieval=true&allowLoadLocalInfile=true",
+					"root", "1234");
+			stmt = con.createStatement();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	void execute(String sql) {
+		try {
+			stmt.execute(sql);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	void createT(String t, String c) {
+		execute("create table " + t + "(" + c + ")");
+		execute("load data local infile './지급파일/" + t + ".csv' into table " + t
+				+ " fields terminated by ',' lines terminated by '\r\n'  ignore 1 lines");
+
+	}
+
+	public DB() {
+		execute("drop database if exists busticketbooking");
+		execute("create database busticketbooking default character set utf8");
+		execute("drop user if exists user@localhost");
+		execute("create user user@localhost identified by '1234'");
+		execute("use busticketbooking");
+		execute("grant select, insert, delete, update on busticketbooking.* to user@localhost");
+		execute("set global local_infile = 1");
+
+		createT("user",
+				"no int primary key not null auto_increment, id varchar(50) not null, pwd varchar(50) not null, name varchar(50) not null, email varchar(50) not null, point int not null");
+		createT("location", "no int primary key not null auto_increment, name varchar(50) not null");
+		createT("location2",
+				"no int primary key not null auto_increment, name varchar(50) not null, location_no int not null, foreign key(location_no) references location(no)");
+		createT("schedule",
+				"no int primary key not null auto_increment, departure_location2_no int not null, arrival_location2_no int not null, date DATETIME not null, elapsed_time TIME not null, foreign key(departure_location2_no) references location2(no), foreign key(arrival_location2_no) references location2(no)");
+		createT("reservation",
+				"no int primary key not null auto_increment, user_no int not null, schedule_no int, foreign key(schedule_no) references schedule(no), foreign key(user_no) references user(no)");
+		createT("recommend",
+				"no int primary key not null auto_increment, location_no int not null, foreign key(location_no) references location(no)");
+		createT("recommend_info",
+				"recommend_no int not null, title varchar(50) primary key not null, description varchar(1000), img longblob, foreign key(recommend_no) references recommend(no)");
+
+		System.out.println(new File("./지급파일/images/recommend/").list()[2]);
+
+		try (var ps = con.prepareStatement("update recommend info set img = ? where title = ? and recommend_no = ?")) {
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void main(String[] args) {
+		new DB();
+	}
+
+}

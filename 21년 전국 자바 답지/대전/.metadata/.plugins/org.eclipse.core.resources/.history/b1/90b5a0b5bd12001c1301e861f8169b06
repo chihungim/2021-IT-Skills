@@ -1,0 +1,7 @@
+package view;
+
+public class Map extends BaseDialog {
+	public Map() {
+		// TODO Auto-generated constructor stub
+	}
+}

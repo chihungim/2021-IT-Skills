@@ -1,0 +1,17 @@
+package view;
+
+public class MonthSchedule extends BaseFrame {
+
+	@Override
+	void ui() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	void events() {
+		// TODO Auto-generated method stub
+
+	}
+
+}

@@ -1,0 +1,84 @@
+package view;
+
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.GridLayout;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.border.LineBorder;
+
+public class ChartPage extends BasePage {
+
+	JButton prev, next;
+	JLabel lbldate;
+	LocalDate date = LocalDate.now();
+	DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy³â MM¿ù");
+	JPanel days[] = new JPanel[42];
+
+	public ChartPage() {
+		ui();
+	}
+
+	void ui() {
+		add(n = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5)), "North");
+		add(c = new JPanel(new GridLayout(0, 7)));
+		date = LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), 1);
+		n.add(sz(prev = btn("¢¸", a -> setMonth(-1)), 35, 35));
+		n.add(lbldate = lbl(format.format(date), 0, 20));
+		n.add(sz(next = btn("¢º", a -> setMonth(1)), 35, 35));
+		setCal();
+	}
+
+	void setMonth(int no) {
+		date = date.plusMonths(no);
+		setCal();
+	}
+
+	void setCal() {
+		c.removeAll();
+		lbldate.setText(format.format(date));
+		LocalDate sdate = LocalDate.of(date.getYear(), date.getMonthValue(), 1);
+		int sday = sdate.getDayOfWeek().getValue() % 7;
+
+		for (int i = 0; i < 42; i++) {
+			LocalDate tmp = sdate.plusDays(i - sday);
+			days[i] = new JPanel() {
+				
+				int max = get
+				
+				@Override
+				protected void paintComponent(Graphics g) {
+					super.paintComponent(g);
+					try {
+						var rs = rs(
+								"select c.c_No, c.c_Name, sum(pu.pu_Count) from product p inner join category c on c.c_No=p.c_No inner join purchase pu on pu.p_No=p.p_No where pu.s_No= "
+										+ sno + " and pu.pu_Date='" + tmp + "' group by c.c_No order by c.c_No");
+
+						while (rs.next()) {
+						}
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			};
+
+			days[i].setBorder(new LineBorder(Color.BLACK));
+			c.add(days[i]);
+		}
+		repaint();
+		revalidate();
+	}
+
+	public static void main(String[] args) {
+		sno = 1;
+		mf.swapPage(new ChartPage());
+		mf.setVisible(true);
+	}
+}

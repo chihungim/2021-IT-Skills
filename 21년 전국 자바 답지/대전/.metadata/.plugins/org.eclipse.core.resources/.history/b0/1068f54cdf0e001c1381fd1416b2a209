@@ -1,0 +1,22 @@
+package view;
+
+import java.awt.CardLayout;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import view.BaseFrame.IconLabel;
+
+public class Ride extends BaseFrame {
+	String floor[] = "1F,2F,3F,4F,¿ÜºÎ".split(",");
+	JComboBox<String> combo = new JComboBox<String>();
+	JLabel lbl_img[] = new JLabel[5];
+	CardLayout card = new CardLayout();
+	HashMap<String, ArrayList<String>> ride = new HashMap<String, ArrayList<String>>();
+	int point[][][];
+	IconLabel iconlbl[][];
+	JPanel c = new JPanel(card);
+}

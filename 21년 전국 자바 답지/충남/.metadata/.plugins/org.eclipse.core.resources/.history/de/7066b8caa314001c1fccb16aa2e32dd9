@@ -1,0 +1,216 @@
+package 충남;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+
+public class BaseFrame extends JFrame {
+
+	JPanel c, w, e, s, n;
+	static int sno;
+	static String uno = "", uname, sname;
+	static int ubirth, uage;
+
+	static Connection con = DB.con;
+	static Statement stmt = DB.stmt;
+	//
+	static ArrayList<String> metroNames = new ArrayList<String>();
+	static ArrayList<String> stNames = new ArrayList<String>();
+	static Object metroStInfos[][] = new Object[30 + 1][4];
+	static int adjDim[][] = new int[275 + 1][275 + 1];
+	static int lineDim[][] = new int[275 + 1][275 + 1];
+	static int metroTimeDim[][][] = new int[30 + 1][100][300];
+	int INF = 10000000;
+	ResultSet rs;
+
+	public BaseFrame(String tit, int w, int h) {
+		super("서울메트로 - " + tit);
+		this.setSize(w, h);
+		this.setLocationRelativeTo(null);
+		this.setDefaultCloseOperation(2);
+	}
+
+	void dataInit2() throws SQLException {
+		// 전체 노선 목록
+		// ArrayList: 노선 번호 <-> 노선 명
+		rs = stmt.executeQuery("select * from metro");
+		metroNames.add("");
+		while (rs.next()) {
+			metroNames.add(rs.getString(2));
+		}
+
+		// 전체 정류장 목록
+		// ArrayList: 정류장 번호 <-> 정류장 명
+		rs = stmt.executeQuery("select * from station");
+		stNames.add("");
+		while (rs.next()) {
+			stNames.add(rs.getString(2));
+		}
+
+		// 전체 노선별 정류장정보 2차원 배열
+		// metroStInfos[노선의 정류장 ArrayList(노선내 정류장idx <-> 정류장 명)][시작 출차시간][끝 출차 시간][배차
+		// 간격]
+		for (int i = 1; i <= 30; i++) {
+			metroStInfos[i][0] = new ArrayList<String>();
+			((ArrayList) metroStInfos[i][0]).add("");
+
+			rs = stmt.executeQuery(
+					"SELECT s.name FROM route r,  station s where r.metro=" + i + " and r.station=s.serial");
+			while (rs.next()) {
+				((ArrayList) metroStInfos[i][0]).add(rs.getString(1));
+			}
+
+			rs = stmt.executeQuery("select * from metro where serial=" + i);
+			rs.next();
+			metroStInfos[i][1] = rs.getString(3);
+			metroStInfos[i][2] = rs.getString(4);
+			metroStInfos[i][3] = rs.getString(5);
+		}
+
+		// 정류장-정류장 운행노선: lineDim[출발 정류장 번호][도착 정류장 번호]
+		for (int i = 1; i <= 30; i++) {
+			ArrayList al = (ArrayList) metroStInfos[i][0];
+			for (int j = 1; j <= al.size() - 2; j++) {
+				lineDim[stNames.indexOf(al.get(j))][stNames.indexOf(al.get(j + 1))] = i;
+			}
+		}
+
+		// 인접 배열 for 다익스트라
+		// dijDim[출발 정류장 번호][도착 정류장 번호]
+		for (int i = 1; i < 276; i++) {
+			for (int j = i + 1; j < 276; j++) {
+				adjDim[i][j] = adjDim[j][i] = INF;
+			}
+		}
+
+		rs = stmt.executeQuery("SELECT * FROM metro.path");
+		while (rs.next()) {
+			adjDim[rs.getInt(2)][rs.getInt(3)] = rs.getInt(4) * 5;
+		}
+
+		// 전체 노선 운행시간표 3차원 배열: "00:00:00"를 초 단위로 환산
+		// metroTimeDim[노선 번호][노선내 정류장idx][운행 시간]
+		for (int i = 1; i <= 30; i++) {
+			for (int j = 1; j < 100; j++) {
+				ArrayList thisMetro = (ArrayList) metroStInfos[i][0];
+				if (j >= thisMetro.size())
+					break;
+
+				int sTime = LocalTime.parse((CharSequence) metroStInfos[i][1]).toSecondOfDay();
+				int eTime = LocalTime.parse((CharSequence) metroStInfos[i][2]).toSecondOfDay();
+				int timeGap = LocalTime.parse((CharSequence) metroStInfos[i][3]).toSecondOfDay();
+
+				metroTimeDim[i][j][0] = j == 1 ? sTime
+						: metroTimeDim[i][j - 1][0]
+								+ adjDim[stNames.indexOf(thisMetro.get(j - 1))][stNames.indexOf(thisMetro.get(j))];
+				for (int k = 1; k < 300; k++) {
+					if (j > 1 && metroTimeDim[i][j - 1][k] == 0)
+						break;
+					if (metroTimeDim[i][j][k - 1] + timeGap > eTime)
+						break;
+
+					metroTimeDim[i][j][k] = metroTimeDim[i][j][k - 1] + timeGap;
+				}
+			}
+		}
+	}
+
+	String tformat(LocalTime t, String format) {
+		return DateTimeFormatter.ofPattern(format).format(t);
+	}
+
+	static <T extends JComponent> T sz(T c, int w, int h) {
+		c.setPreferredSize(new Dimension(w, h));
+		return c;
+	}
+
+	static void eMsg(String msg) {
+		JOptionPane.showMessageDialog(null, msg, "경고", JOptionPane.ERROR_MESSAGE);
+	}
+
+	static void iMsg(String msg) {
+		JOptionPane.showMessageDialog(null, msg, "정보", JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	static JLabel lbl(String text, int alig) {
+		JLabel l = new JLabel(text, alig);
+		return l;
+	}
+
+	static JLabel lbl(String text, int alig, int size) {
+		JLabel l = new JLabel(text, alig);
+		l.setFont(new Font("맑은 고딕", Font.BOLD, size));
+		return l;
+	}
+
+	static JLabel lblP(String text, int alig, int size) {
+		JLabel l = new JLabel(text, alig);
+		l.setFont(new Font("맑은 고딕", Font.PLAIN, size));
+		return l;
+	}
+
+	static JLabel lbl(String text, int alig, int size, Color col) {
+		JLabel l = new JLabel(text, alig);
+		l.setFont(new Font("맑은 고딕", Font.BOLD, size));
+		return l;
+	}
+
+	static JLabel lblP(String text, int alig, int size, Color col) {
+		JLabel l = new JLabel(text, alig);
+		l.setFont(new Font("맑은 고딕", Font.PLAIN, size));
+		return l;
+	}
+
+	static JButton btn(String text, ActionListener a) {
+		JButton b = new JButton(text);
+		b.addActionListener(a);
+		b.setBackground(new Color(50, 100, 255));
+		b.setForeground(Color.white);
+		return b;
+	}
+
+	static void setLine(JComponent c) {
+		c.setBorder(new LineBorder(Color.black));
+	}
+
+	static void setLine(JComponent c, Color col) {
+		c.setBorder(new LineBorder(col));
+	}
+
+	static void setEmpty(JComponent c, int t, int l, int b, int r) {
+		c.setBorder(new EmptyBorder(t, l, b, r));
+	}
+
+	static ImageIcon img(String path, int w, int h) {
+		return new ImageIcon(Toolkit.getDefaultToolkit().getImage("./지급자료/images/" + path).getScaledInstance(w, h,
+				Image.SCALE_SMOOTH));
+	}
+
+	static int rei(Object obj) {
+		if (obj.toString().isEmpty())
+			return 0;
+		return Integer.parseInt(obj.toString());
+	}
+
+
+}

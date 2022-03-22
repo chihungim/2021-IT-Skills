@@ -1,0 +1,8 @@
+package view;
+
+public class Stage extends BaseFrame {
+	public Stage() {
+		super("ÁÂ¼®", 1200, 600);
+		setVisible(true);
+	}
+}

@@ -1,0 +1,69 @@
+package view;
+
+import java.awt.BorderLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.sql.SQLException;
+
+import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JTextArea;
+
+public class MoreInfo extends BaseFrame {
+
+	JCheckBox chk = new JCheckBox("장애인");
+	JTextArea area = new JTextArea();
+	String cap[] = "탑승인원,탑승제한,위치".split(",");
+	String info[] = new String[3];
+	String title;
+	JLabel imglbl;
+
+	public MoreInfo(String title) {
+		super("상세정보", 700, 400);
+		data();
+		ui();
+		setVisible(true);
+	}
+
+	void ui() {
+		setLayout(new BorderLayout(5, 5));
+	}
+
+	void data() {
+		area.setText(getOne("select r_explanation from ride where r_name = '" + title + "'").split("#")[0]);
+
+		try {
+			var rs = stmt.executeQuery("select r_max, r_height, r_floor from ride where r_name = '" + title + "'");
+			if (rs.next()) {
+				for (int i = 0; i < 3; i++) {
+					info[i] = rs.getString(i + 1);
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		try {
+			var rs = stmt.executeQuery("select * from ride where r_name like '%" + title + "%'");
+			if (rs.next()) {
+				imglbl = new JLabel(new ImageIcon(Toolkit.getDefaultToolkit().createImage(rs.getBytes("r_img"))
+						.getScaledInstance(230, 300, Image.SCALE_SMOOTH)));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		chk.setSelected(getOne("select r_disable from ride where r_name = '" + title + "'").contentEquals("1"));
+	}
+
+	void btn_event() {
+
+	}
+
+	public static void main(String[] args) {
+
+	}
+}

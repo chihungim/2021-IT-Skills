@@ -1,0 +1,30 @@
+package view;
+
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+
+public class Login extends BaseFrame {
+
+	JTextField txt[] = { new JTextField(15), new JPasswordField(15) };
+
+	public Login() {
+		super("·Î±×ÀÎ", 400, 200);
+		ui();
+		event();
+		setVisible(true);
+	}
+
+	private void event() {
+		// TODO Auto-generated method stub
+
+	}
+
+	private void ui() {
+		// TODO Auto-generated method stub
+
+	}
+
+	public static void main(String[] args) {
+		new Login();
+	}
+}

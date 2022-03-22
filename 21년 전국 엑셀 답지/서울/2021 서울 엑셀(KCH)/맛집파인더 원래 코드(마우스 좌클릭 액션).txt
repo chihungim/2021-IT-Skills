@@ -1,0 +1,304 @@
+Dim vYpos, vXpos ''view
+Dim dirX()
+Dim dirY()
+Dim arrow()
+Dim rLow, rHigh, cLow, cHigh, rStart, cStart, rEnd, cEnd
+Sub init()
+    With Range(Cells(3, 9), Cells(102, 108))
+        .ClearContents
+        .Interior.color = vbWhite
+    End With
+    
+    rLow = 1: rHigh = 25: rStart = 1: rEnd = 100
+    cLow = 1: cHigh = 30: cStart = 1: cEnd = 100
+
+    With Range(Cells(3, 9), Cells(102, 108)).Borders
+        .LineStyle = 1
+        .color = vbBlack
+        .Weight = xlThin
+    End With
+    
+    With Range(Cells(3, 9), Cells(102, 108))
+        .ColumnWidth = 5
+        .RowHeight = 40
+    End With
+
+        
+    For i = 2 To Sheet3.Range("A1000").End(3).Row
+        c = Val(Split(Sheet3.Range("C" & i).Value, ",")(0)) + 1
+        r = Val(Split(Sheet3.Range("C" & i).Value, ",")(1)) + 1
+        Range("맵").Cells(r, c).Interior.color = vbWhite
+        Range("맵").Cells(r, c) = Sheet3.Range("A" & i).Value
+        If Left(Sheet3.Range("A" & i), 1) = "A" Then
+            Range("맵").Cells(r, c).Interior.color = vbGreen
+        Else
+            Range("맵").Cells(r, c).Interior.color = vbRed
+        End If
+    
+        
+        Range("맵").Cells(r, c) = Sheet3.Range("A" & i).Value
+
+    Next
+    
+    For i = 2 To Sheet6.Range("A10000").End(xlUp).Row
+        c = Val(Split(Sheet6.Range("B" & i).Value, ",")(0)) + 1
+        r = Val(Split(Sheet6.Range("B" & i).Value, ",")(1)) + 1
+        Range("맵").Cells(r, c).Interior.color = RGB(200, 200, 200)
+        Range("맵").Cells(r, c) = Sheet6.Range("A" & i)
+    Next
+    dirY = Array(0, 1, 2, 1)
+    dirX = Array(1, 2, 1, 0)
+    
+    arrow = Array("↑", "→", "↓", "←")
+    영역표시
+End Sub
+    
+Sub 영역표시()
+
+    Range("맵").EntireRow.Hidden = True
+    Range("맵").EntireColumn.Hidden = True
+
+    Range("맵").Range(Cells(rLow, 1), Cells(rHigh, 1)).EntireRow.Hidden = False
+    Range("맵").Range(Cells(1, cLow), Cells(1, cHigh)).EntireColumn.Hidden = False
+End Sub
+
+Private Sub Worksheet_Activate()
+    Application.ScreenUpdating = False
+    init
+    Application.ScreenUpdating = True
+
+    If [타입] <> "관리자" Then
+        po = Split([좌표], ",")
+        Range("A2") = Int(po(0)): Range("B2") = Int(po(1))
+    End If
+    Hyperlinks.Add Shapes("직사각형 9"), "", "", "내 위치로 가기"
+
+End Sub
+
+Sub Up()
+    If rLow > rStart Then
+        rLow = rLow - 1: rHigh = rHigh - 1
+        Call 영역표시
+    End If
+End Sub
+
+Sub Down()
+    If rHigh < rEnd Then
+        rLow = rLow + 1: rHigh = rHigh + 1
+        Call 영역표시
+    End If
+End Sub
+
+Sub Left()
+    If cLow > cStart Then
+        cLow = cLow - 1: cHigh = cHigh - 1
+        Call 영역표시
+    End If
+End Sub
+
+Sub 길찾기()
+    
+    Call init
+    
+    Set 이전위치 = New ArrayList
+    Set 최단경로 = New ArrayList
+    Set 최단방향 = New ArrayList
+    Set 탐색경로 = New ArrayList
+    Set 경로수 = New ArrayList
+    Set 방향 = New ArrayList
+    Set 출발 = Range("맵").Find([판매자번호])
+    Set 도착 = Range("맵").Find([번호])
+    
+    If 출발.Cells(1, 2) = "" Then 탐색경로.Add 출발.Cells(1, 2).Address: 경로수.Add 1: 이전위치.Add -1: 방향.Add 0
+    If 출발.Cells(2, 1) = "" Then 탐색경로.Add 출발.Cells(2, 1).Address: 경로수.Add 1: 이전위치.Add -1: 방향.Add 2
+    If 출발.Cells(1, 0) = "" Then 탐색경로.Add 출발.Cells(1, 0).Address: 경로수.Add 1: 이전위치.Add -1: 방향.Add 1
+    If 출발.Cells(0, 1) = "" Then 탐색경로.Add 출발.Cells(0, 1).Address: 경로수.Add 1: 이전위치.Add -1: 방향.Add 3
+  
+    deqIdx = -1
+    
+    Do While (1)
+        deqIdx = deqIdx + 1
+        Set 현재 = Range(탐색경로(deqIdx))
+        pcnt = 경로수(deqIdx)
+    
+        If 현재.Cells(1, 2) = 도착 Or 현재.Cells(2, 1) = 도착 Or 현재.Cells(1, 0) = 도착 Or 현재.Cells(0, 1) = 도착 Then Exit Do
+        
+        For i = 0 To 3
+             dy = dirY(i)
+             dx = dirX(i)
+             Set cur = 현재.Cells(dy, dx)
+             If Not 탐색경로.Contains(cur.Address) And cur = "" And cur <> 1 Then
+                탐색경로.Add cur.Address: 경로수.Add pcnt + 1: 이전위치.Add deqIdx: 방향.Add arrow(i)
+             End If
+        Next
+    Loop
+
+    idx = deqIdx
+    
+    Do While (1)
+        최단경로.Add 탐색경로(idx)
+        최단방향.Add 방향(idx)
+        idx = 이전위치(idx)
+        If idx = -1 Then Exit Do
+    Loop
+
+    최단경로.Reverse
+    최단방향.Reverse
+
+    For i = 0 To 최단경로.Count - 1
+        Sheet8.Range(최단경로(i)).Interior.color = vbYellow
+        Sheet8.Range(최단경로(i)) = Array(최단방향(i))
+        DoEvents
+    Next
+    
+    If Range("B1") = "치타" Then
+        Shapes("직사각형 3").TextFrame.Characters.Text = "예상시간 : " & Int(최단경로.Count / 3) & " 분"
+    Else
+        Shapes("직사각형 3").TextFrame.Characters.Text = "예상시간 : " & Int(최단경로.Count / 3) + 10 & " 분"
+    End If
+End Sub
+
+Sub Right()
+    If cHigh < cEnd Then
+        cLow = cLow + 1: cHigh = cHigh + 1
+        Call 영역표시
+    End If
+End Sub
+
+Sub 내위치로_Click()
+    If Not [타입] = "주문자" Then Exit Sub
+    
+    myC = [uX] + 1: myR = [uY] + 1
+    
+    cGap = 29: rGap = 24
+    cLGap = Int(cGap / 2): cRGap = cGap - cLGap
+    rUGap = Int(rGap / 2): rDGap = rGap - rUGap
+
+    '열 이동
+    If myC - cLGap >= cStart And myC + cRGap <= cEnd Then
+        cLow = myC - cLGap: cHigh = myC + cRGap
+    ElseIf myC - cLGap >= cStart And myC + cRGap > cEnd Then
+        cLow = myC - cGap: cHigh = myC
+    Else
+        cLow = myC: cHigh = myC + cGap
+    End If
+
+    '행 이동
+    If myR - rUGap >= rStart And myR + rDGap <= rEnd Then
+        rLow = myR - rUGap: rHigh = myR + rDGap
+    ElseIf myR - rUGap >= rStart And myR + rDGap > rEnd Then
+        rLow = myR - rGap: rHigh = myR
+    Else
+        rLow = myR: rHigh = myR + rGap
+    End If
+    영역표시
+End Sub
+
+Private Sub Worksheet_BeforeDoubleClick(ByVal Target As Range, Cancel As Boolean)
+    r = Target.Row - 2
+    c = Target.Column - 8
+
+    If r < 0 Or c < 0 Or r > 100 Or c > 100 Then Exit Sub
+    
+    If Not (Range("맵").Cells(r, c) Like "Z*") Then eMsg "매장이 아닙니다.": Exit Sub
+    If [번호] = "" Then eMsg "구매가 불가능한 계정입니다.": Exit Sub
+    
+    음식점 = Target.Value
+    Range("A1") = Target.Value
+    
+    With Sheet7
+        For i = 2 To .Range("A1000").End(3).Row
+            If .Range("B" & i) = [번호] And .Range("F" & i) = Date And .Range("C" & i) = [가계이름] Then eMsg "오늘 이미 구매하신 가게입니다.": Exit Sub
+        Next
+    End With
+
+
+    Range("A1") = Target.Value
+    구매.Show
+End Sub
+
+Private Sub Worksheet_BeforeRightClick(ByVal Target As Range, Cancel As Boolean)
+        xPos = Target.Column
+        yPos = Target.Row
+
+        
+        If Cells(xPos, yPos) = "" Then Application.CommandBars("Cell").Reset
+        
+        If [타입] = "주문자" Then
+            If Target.Interior.color = vbRed Then
+                Set dic = mkdic(Sheet3.Range("B2"))
+                k = False
+                With Sheet7
+                    For i = 2 To .Range("A1000").End(3).Row
+                        If .Range("B" & i) = [번호] And DateValue(.Range("F" & i)) = Date And dic(.Range("C" & i).Value).Cells(1, 0) = Target.Value Then
+                            k = True
+                        End If
+                    Next
+                End With
+                
+                If Not k Then eMsg "구입하신 내역이 없습니다.": Application.CommandBars("Cell").Reset: Exit Sub
+                
+                리뷰여부 = False
+            
+                With Sheet9
+                    For i = 2 To .Range("A1000").End(3).Row
+                        If .Range("B" & i) = [번호] And DateValue(.Range("E" & i)) = Date And dic(.Range("D" & i).Value).Cells(1, 0) = Target.Value Then
+                            리뷰여부 = True
+                        End If
+                    Next
+                End With
+                
+                If 리뷰여부 Then eMsg "이미 리뷰를 작성하셨습니다.": Application.CommandBars("Cell").Reset: Exit Sub
+    
+                For Each i In Application.CommandBars("Cell").Controls
+                    i.Delete
+                Next
+            
+                Range("A1") = Target.Value
+                
+                Set btn = Application.CommandBars("Cell").Controls.Add(msoControlButton)
+                btn.Caption = "리뷰쓰기"
+                btn.FaceId = 201
+                btn.OnAction = "review "
+            Else
+                Application.CommandBars("Cell").Reset
+                Exit Sub
+            End If
+        ElseIf [타입] = "관리자" Then
+            If (Target.Interior.color = RGB(200, 200, 200) Or Target.Value = "") Then
+                For Each i In Application.CommandBars("Cell").Controls
+                    i.Delete
+                Next
+                
+                Set btn = Application.CommandBars("Cell").Controls.Add(msoControlPopup)
+                
+                With btn
+                    .Caption = "권한"
+                    X = xPos - 9 + vXpos
+                    Y = yPos - 3 + vYpos
+                    
+                    With .Controls.Add(msoControlButton)
+                        .Caption = "벽 설치"
+                        .FaceId = 642
+
+                        .OnAction = "벽설치"
+                    End With
+            
+                    With .Controls.Add(msoControlButton)
+                        .Caption = "벽 제거"
+                        .FaceId = 611
+                        .OnAction = "벽제거"
+                    End With
+            
+                    With .Controls.Add(msoControlButton)
+                        .Caption = "벽 반전"
+                        .FaceId = 207
+                        .OnAction = "벽반전"
+                    End With
+                End With
+            Else
+                Application.CommandBars("Cell").Reset
+            End If
+        End If
+End Sub
+

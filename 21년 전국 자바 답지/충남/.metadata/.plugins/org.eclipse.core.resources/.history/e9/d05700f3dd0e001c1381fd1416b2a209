@@ -1,0 +1,43 @@
+package view;
+
+import java.awt.Color;
+
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
+public class MyPage extends BaseFrame {
+	DefaultTableModel m = model("예매번호,기구이름,예약날짜,기구설명".split(","));
+	JTable t = new JTable(m) {
+		public java.awt.Component prepareRenderer(javax.swing.table.TableCellRenderer renderer, int row, int column) {
+			var comp = (JComponent) super.prepareRenderer(renderer, row, column);
+			if (row % 2 == 0) {
+				comp.setBackground(Color.blue);
+				comp.setForeground(Color.white);
+			} else {
+				comp.setBackground(Color.white);
+				comp.setForeground(Color.black);
+			}
+			return comp;
+		};
+	};
+	JLabel lbl_img;
+
+	public MyPage() {
+		super("Mypage", 780, 280);
+		setVisible(true);
+	}
+
+	void data() {
+
+	}
+
+	void ui() {
+
+	}
+
+	void events() {
+
+	}
+}

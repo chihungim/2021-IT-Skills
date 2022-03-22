@@ -1,0 +1,14 @@
+package view;
+
+import javax.swing.table.DefaultTableModel;
+
+public class Reserve extends BaseFrame {
+
+	DefaultTableModel m = new DefaultTableModel(null, ",번호,기구명,층수,탑승인원,키제한,나이 제한,금액,기구설명".split(",")) {
+		
+	}
+
+	public Reserve() {
+	}
+
+}

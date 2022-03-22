@@ -1,0 +1,50 @@
+package view;
+
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
+public class Reserve extends BaseFrame {
+
+	DefaultTableModel m = model("pno,날짜,여유좌석,d".split(","));
+	JTable t = new JTable(m);
+	JLabel lbl;
+	String date;
+	DecimalFormat dec = new DecimalFormat("#,##0");
+	String pno;
+
+	public Reserve(String pno) {
+		super("예매", 600, 300);
+		this.pno = pno;
+		data();
+		setVisible(true);
+	}
+
+	void ui() {
+
+	}
+
+	void data() {
+		try {
+			System.out.println("select * from perform where p_no=" + pno);
+			var rs = stmt.executeQuery("select * from perform where p_no=" + pno);
+			if (rs.next()) {
+				for (int i = 0; i < pinfo.length; i++) {
+					pinfo[i] = rs.getString(i + 1);
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		date = pinfo[6];
+		addRow(m,
+				"select p.p_no, date_format(p.p_date, '%m. %d.'), 60 - count(*), p.p_date from perform p, ticket t where p.p_no=t.p_no and p.p_name like '%"
+						+ pinfo[2] + "' group by p.p_no");
+	}
+
+}

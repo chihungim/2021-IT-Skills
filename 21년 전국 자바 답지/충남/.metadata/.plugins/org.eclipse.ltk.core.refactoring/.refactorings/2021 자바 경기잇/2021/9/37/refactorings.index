@@ -1,0 +1,10 @@
+1630808693557	Rename method 'loginEnabled'
+1630812335203	Rename type 'SignUp'
+1630812983450	Rename type 'Locate'
+1630820052523	Rename local variable 'no'
+1630822979056	Rename compilation unit 'Ride_apply_edit.java'
+1630832821724	Rename field 'cap'
+1630833116041	Rename local variable 'tit'
+1630833541545	Rename field 'lblImg'
+1630833546832	Rename field 'img_lbl'
+1630889540648	Infer generic type arguments

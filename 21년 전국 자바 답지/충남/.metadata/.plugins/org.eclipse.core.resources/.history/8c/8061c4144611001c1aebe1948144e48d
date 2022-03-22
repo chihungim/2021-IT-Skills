@@ -1,0 +1,6 @@
+package view;
+
+public class ManagePage extends BasePage {
+	JPanel page;
+	String bcap[] = "배송관리,배송현황,통계".split(",");
+}

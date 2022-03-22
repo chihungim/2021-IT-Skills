@@ -1,0 +1,21 @@
+package view;
+
+import java.text.DecimalFormat;
+
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
+public class Reserve extends BaseFrame {
+
+	DefaultTableModel m = model("pno,날짜,여유좌석,d".split(","));
+	JTable t = new JTable(m);
+	JLabel lbl;
+	String date;
+	DecimalFormat dec = new DecimalFormat("#,##0");
+
+	public Reserve(String name) {
+		super("예매", 600, 300);
+	}
+
+}

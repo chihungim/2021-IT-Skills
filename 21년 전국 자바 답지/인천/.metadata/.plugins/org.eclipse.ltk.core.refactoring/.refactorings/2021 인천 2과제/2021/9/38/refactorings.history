@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;datafile&apos; to &apos;2021 인예아&apos;&#x0D;&#x0A;- Original project: &apos;2021 인천 2과제&apos;&#x0D;&#x0A;- Destination element: &apos;2021 인예아&apos;&#x0D;&#x0A;- Original element: &apos;datafile&apos;" description="Copy folder" element1="datafile" files="0" flags="589830" folders="1" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1631871813629" target="/2021 인예아" units="0" version="1.0"/>
+</session>

@@ -1,0 +1,12 @@
+package view;
+
+import java.awt.GridBagLayout;
+
+public class MyPage extends BasePage {
+	JPanel page;
+	String bcap[] = "구매내역,정보수정".split(",");
+
+	public MyPage() {
+		add(page = new JPanel(new GridBagLayout()));
+	}
+}

@@ -1,0 +1,23 @@
+package view;
+
+public class Register extends BaseFrame {
+
+	@Override
+	void data() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	void ui() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	void events() {
+		// TODO Auto-generated method stub
+
+	}
+
+}

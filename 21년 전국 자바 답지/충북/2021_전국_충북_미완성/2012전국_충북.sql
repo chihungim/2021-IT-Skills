@@ -1,0 +1,36 @@
+-- select s.name, a.name, month(h.date), count(*) from song s, album a, history h where s.serial = h.song and s.album = a.serial and month(h.date) = 10 group by s.name order by count(*) desc
+-- SELECT a.name, s.name, a.serial, a.release FROM album a, song s where `release` <= curdate() and a.serial = s.album order by `release` desc
+-- select r.name, s.name, a.name, month(h.date), count(*) from song s, album a,  history h, region r, user u where u.region = r.serial and month(h.date) = 10 and r.serial = 1 and h.song = s.serial and s.album = a.serial and s.titlesong = 1 group by h.song order by count(*) desc 
+-- select s.serial, s.name, h.date from history h, song s where h.song = s.serial and s.name like "%Answer%"
+-- select s.name, month(h.date), r.name from song s, history h, region r, user u where s.serial = h.song and u.serial = h.user and u.region = r.serial and s.name like "%Seattl " 
+-- 카테고리페이지 앨범 년도별 검색 쿼리
+-- select a.name, year(a.release), a.serial from history h, song s, category c, album a where a.category = c.serial and 
+-- 검색페이지 노래 갯수 검색 쿼리
+-- select count(*) from song s inner join album al on s.album = al.serial where s.name like "%Th%" or al.name like "%Th%"
+-- 검색페이지 노래 이름 검색 쿼리 
+-- select count(*), s.name, serial from album a, song s where s.album = a.serial and s.name like \"%" + txt.getText() + "%\" group by s.name limit 4
+-- 검색페이지 앨범 이름 검색 쿼리
+-- select count(*), a.name, serial from album a, song s where s.album = a.serial and a.name like \"%" + txt.getText() + "%\" group by a.name limit 4 
+-- 검색페이지 아티스트 이름 검색 쿼리
+-- select count(*),  name, serial from artist where name like \"%" + txt.getText() + "%\" group by name limit 4
+-- 검색페이지 플레이리스트 이름 검색 쿼리
+-- select count(*), name from playlist where name like \"%"+txt.getText()+"%\" group by name limit 4
+-- 아티스트 개요 검색 쿼리
+-- select s.serial, ar.name,  s.titlesong, s.name, mid(s.length, 4), if((select 1 from favorite fa, user u, song s1 where fa.song = s1.serial and fa.user = u.serial and s1.serial = s.serial and u.serial =1) = null, 1, 0)from song s, artist ar, album al, history h where s.serial = h.song and al.serial = s.album and ar.serial = al.artist and ar.name = "방탄소년단" group by s.name order by count(*) desc, s.name asc limit 5;
+-- 아티스트 차트 쿼리
+-- select (2021 - year(u.birth)) as age, count(*) from artist ar, album al, user u, song s, history h where h.song = s.serial and h.user = u.serial and s.album = al.serial and al.artist = ar.serial and ar.serial = 26 group by age order by age
+-- 아티스트페이지 세계 순위 검색 쿼리
+-- select ar.name, count(*) from artist ar, song s, history h, album al where s.serial = h.song and al.serial = s.album and al.artist = ar.serial group by ar.name order by count(*) desc;
+-- 아티스트페이지 리뷰 검색 쿼리
+-- select u.name, co.rate, co.date, co.content from user u, community co where u.serial = co.user and co.artist = 26 order by co.date desc
+-- 앨범페이지 정보 검색 쿼리
+-- select al.name, ar.name, c.name, al.release from album al, artist ar, category c where c.serial = al.category and ar.serial = al.artist and al.serial = 95
+-- 좋아요페이지 음악 갯수 검색 쿼리
+-- select count(*) from favorite where user = 1
+-- 좋아요페이지 음악 리스트 검색 쿼리
+-- select s.titlesong, s.name, mid(s.length, 4) from song s, favorite fa, user u where u.serial = fa.user and s.serial = fa.song and u.serial = 1
+-- 재생기록페이지 음악 갯수 쿼리
+-- select s.serial, s.titlesong, s.name, if((select count(*) from favorite fa, user u, song s1 where fa.user = u.serial and fa.song = s1.serial and s1.serial = s.serial and u.serial = 1  )=0, 0, 1), mid(s.length, 4) from history h, song s, user u where h.song = s.serial and u.serial = h.user and user =1 order by h.serial desc
+-- 플레이리스트페이지 음악 검색 쿼리
+-- select s.serial, s.titlesong, s.name, if((select count(*) from favorite fa, user u, song s1 where fa.user = u.serial and s1.serial = fa.song and s1.serial = s.serial and u.serial = 1  ) = 0, 0, 1), mid(s.length, 4), al.serial from songlist sl, playlist pl, user u, song s, album al where pl.user = u.serial and sl.playlist = pl.serial and sl.song = s.serial and al.serial = s.album and u.serial = 1 and pl.serial =1
+ --플레이리스트페이지 

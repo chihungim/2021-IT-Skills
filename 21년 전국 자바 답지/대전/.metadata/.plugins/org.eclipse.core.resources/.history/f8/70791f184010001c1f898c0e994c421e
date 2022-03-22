@@ -1,0 +1,108 @@
+package view;
+
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.FlowLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+public class Main extends BaseFrame {
+
+	String titles[] = "인기공연(뮤지컬),인기공연(오페라),인기공연(콘서트)".split(","), type[] = "M,C,O".split(",");
+	JLabel lbls[] = lbls("TICKETING,MONTH SCHEDULE,CHART,LOGIN,MYPAGE".split(","), JLabel.LEFT, 15);
+	JPanel[] pop = new JPanel[3];
+	static JLabel uimg, loginlbl;
+	CardLayout page;
+	JPanel viewP;
+
+	public Main() {
+		super("메인", 620, 300);
+		ui();
+		events();
+		setVisible(true);
+	}
+
+	@Override
+	void ui() {
+		setLayout(new BorderLayout(0, 20));
+		var n = new JPanel(new BorderLayout());
+		var n_w = new JPanel(new FlowLayout(0, 10, 0));
+		var n_e = new JPanel(new FlowLayout(2, 10, 0));
+		viewP = new JPanel(page = new CardLayout());
+
+		add(n, "North");
+		n.add(n_w, "West");
+		n.add(n_e, "East");
+		add(viewP);
+
+		for (int i = 0; i < lbls.length; i++) {
+			if (i < 3)
+				n_w.add(lbls[i]);
+			else {
+				if (i == 3) {
+					n_e.add(uimg = new JLabel());
+					loginlbl = lbls[i];
+				}
+				n_e.add(lbls[i]);
+			}
+
+		}
+	}
+
+	@Override
+	void events() {
+		for (int i = 0; i < lbls.length; i++) {
+			lbls[i].addMouseListener(new MouseAdapter() {
+				@Override
+				public void mousePressed(MouseEvent e) {
+					String name = ((JLabel) e.getSource()).getText();
+
+					switch (name) {
+					case "TICKETING":
+						new Search().addWindowListener(new Before(Main.this));
+						break;
+					case "MONTH SCHEDULE":
+						new MonthSchedule().addWindowListener(new Before(Main.this));
+						break;
+					case "CHART":
+						new Chart().addWindowListener(new Before(Main.this));
+						break;
+					case "LOGIN":
+						new Login().addWindowListener(new Before(Main.this));
+						break;
+					case "LOGOUT":
+						eMsg("로그아웃 되었습니다.");
+						uimg.setIcon(null);
+						uimg.setBorder(null);
+						loginlbl.setText("LOGIN");
+						break;
+					case "MYPAGE":
+						if (loginlbl.getText().equals("LOGIN")) {
+							eMsg("로그인을 하세요.");
+							return;
+						}
+
+						new MyPage().addWindowListener(new Before(Main.this));
+						break;
+					default:
+						break;
+					}
+					super.mousePressed(e);
+				}
+			});
+		}
+	}
+
+	@Override
+	void data() {
+
+	};
+
+	public static void main(String[] args) {
+		new Main().setVisible(true);
+	}
+
+}

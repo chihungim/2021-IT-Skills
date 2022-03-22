@@ -1,0 +1,26 @@
+package view;
+
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+
+import javax.swing.JPanel;
+
+public class Stage extends BaseFrame {
+	public Stage() {
+		super("ÁÂ¼®", 1200, 600);
+		setVisible(true);
+	}
+
+	void ui() {
+		setLayout(new BorderLayout());
+		var seatP = new JPanel(new BorderLayout());
+		var seat_c = new JPanel(new BorderLayout());
+		var seat_c_c = new JPanel(new GridLayout(0, 11, 5, 5));
+		var basketP = new JPanel(new BorderLayout());
+		var basket_c = new JPanel(new BorderLayout());
+		var basket_c_n = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		var basket_s = new JPanel(new GridLayout(0, 2, 5, 5));
+		
+	}
+}

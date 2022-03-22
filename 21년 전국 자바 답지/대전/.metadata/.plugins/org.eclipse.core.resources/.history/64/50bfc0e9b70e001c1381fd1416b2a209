@@ -1,0 +1,30 @@
+package view;
+
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+
+public class Login extends BaseFrame {
+
+	JTextField txt[] = { new JTextField(15), new JPasswordField(15) };
+
+	public Login() {
+		super("로그인", 400, 200);
+		ui();
+		event();
+		setVisible(true);
+	}
+
+	private void event() {
+		// TODO Auto-generated method stub
+
+	}
+
+	private void ui() {
+		add(imglbl("./datafiles/캐릭터/로티1.jpg", 150, 150),"West");
+
+	}
+
+	public static void main(String[] args) {
+		new Login();
+	}
+}

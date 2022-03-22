@@ -1,0 +1,53 @@
+package db;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class DB {
+	static Connection con;
+	static Statement stmt;
+	static {
+		try {
+			con = DriverManager.getConnection(
+					"jdbc:mysql://localhost?serverTimezone=UTC&allowPublicKeyRetrieval=true&allowLoadLocalInfile=true",
+					"root", "1234");
+			stmt = con.createStatement();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	void execute(String sql) {
+		try {
+			stmt.execute(sql);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	void createT(String t, String c) {
+		execute("create " + t + "(" + c + ")");
+		execute("load data local infile './지급자료/" + t + ".txt' into table " + t
+				+ " line terminated by '\r\n' ignore 1 lines");
+	}
+
+	public DB() {
+		execute("drop database if exists Eats");
+		execute("create database eats default character set utf8");
+		execute("drop user if exists user@localhost");
+		execute("create user user@localhost identified by '1234'");
+		execute("grant select, delete, update, insert on eats.* to user@localhost");
+		execute("set global local_infile = 1");
+		execute("use eats");
+
+	}
+
+	public static void main(String[] args) {
+		new DB();
+	}
+
+}

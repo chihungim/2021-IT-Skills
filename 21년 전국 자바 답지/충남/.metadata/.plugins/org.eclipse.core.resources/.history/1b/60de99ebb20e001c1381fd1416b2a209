@@ -1,0 +1,6 @@
+package view;
+
+public class Ride_apply_edit extends BaseFrame {
+	public Ride_apply_edit() {
+	}
+}

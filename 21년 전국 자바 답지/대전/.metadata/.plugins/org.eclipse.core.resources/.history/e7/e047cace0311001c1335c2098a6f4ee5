@@ -1,0 +1,40 @@
+package view;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.LayoutManager;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.time.LocalDate;
+
+import javax.swing.JPanel;
+
+public class BasePage extends JPanel {
+	JPanel c, w, e, n, s;
+	public static MainFrame mf = new MainFrame();
+	static int uno, sno, s_addr, u_addr;
+
+	static Connection con = db.DB.con;
+	static Statement stmt = db.DB.stmt;
+
+	static String uname, sname, pname;
+	static LocalDate startTime;
+
+	public BasePage() {
+		setLayout(new BorderLayout());
+		setBackground(Color.WHITE);
+	}
+
+	class JPanel extends javax.swing.JPanel {
+		public JPanel() {
+			super(new FlowLayout(FlowLayout.LEFT, 5, 5));
+			setOpaque(false);
+		}
+
+		public JPanel(LayoutManager l) {
+			super(l);
+			setOpaque(false);
+		}
+	}
+}

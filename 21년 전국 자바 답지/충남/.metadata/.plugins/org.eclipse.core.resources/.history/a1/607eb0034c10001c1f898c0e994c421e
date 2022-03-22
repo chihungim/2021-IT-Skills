@@ -1,0 +1,11 @@
+package view;
+
+public class Reserve extends BaseFrame {
+
+	public Reserve(String name) {
+		// TODO Auto-generated constructor stub
+	}
+
+
+
+}

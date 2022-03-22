@@ -1,0 +1,63 @@
+package view;
+
+import java.awt.BorderLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.util.prefs.Preferences;
+
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+
+public class Login extends BaseFrame {
+
+	String cap[] = "ID,PW".split(",");
+	JTextField txt[] = { new JTextField(), new JPasswordField() };
+	JCheckBox chk = new JCheckBox("아이디 저장");
+	Preferences pre = Preferences.userNodeForPackage(BaseFrame.class);
+
+	public Login() {
+		super("로그인", 350, 230);
+		ui();
+		events();
+		setVisible(true);
+		;
+	}
+
+	@Override
+	void data() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	void ui() {
+		var title = new JLabel("ORange Ticket", JLabel.CENTER);
+		title.setFont(new Font("HY헤드라인M", Font.ITALIC + Font.BOLD, 35));
+		add(title, "North");
+
+		var c = new JPanel(new GridLayout(0, 1));
+		var e = new JPanel(new BorderLayout());
+		var s = new JPanel(new BorderLayout());
+
+		add(c);
+		add(e, "East");
+		add(s, "South");
+
+		for (int i = 0; i < cap.length; i++) {
+			var tmp = new JPanel();
+			tmp.add(sz(new JLabel(cap[i], 2), 40, 25));
+			tmp.add(sz(txt[i], 150, 25));
+			c.add(tmp);
+		}
+	}
+
+	@Override
+	void events() {
+		// TODO Auto-generated method stub
+
+	}
+
+}

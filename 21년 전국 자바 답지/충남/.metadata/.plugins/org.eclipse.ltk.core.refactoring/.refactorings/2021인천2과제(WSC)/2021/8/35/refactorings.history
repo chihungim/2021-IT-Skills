@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;db.DBManager&apos; to &apos;Tools&apos;&#x0D;&#x0A;- Original project: &apos;2021인천2과제(WSC)&apos;&#x0D;&#x0A;- Original element: &apos;db.DBManager&apos;&#x0D;&#x0A;- Renamed element: &apos;db.Tools&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;DBManager&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src&lt;db{DBManager.java[DBManager" matchStrategy="1" name="Tools" qualified="false" references="true" similarDeclarations="false" stamp="1629958631981" textual="false" version="1.0"/>
+</session>

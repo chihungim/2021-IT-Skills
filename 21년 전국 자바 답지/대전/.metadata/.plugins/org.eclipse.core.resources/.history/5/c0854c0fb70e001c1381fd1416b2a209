@@ -1,0 +1,8 @@
+package view;
+
+public class Reserve extends BaseFrame {
+
+	public Reserve(String title, int w, int h) {
+	}
+
+}

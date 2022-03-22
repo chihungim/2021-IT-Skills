@@ -1,0 +1,62 @@
+package view;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.border.MatteBorder;
+
+public class Purchase extends BaseFrame {
+	String cap_w[] = "공연명,장소,날짜,좌석,총금액".split(",");
+	String cap_e[] = { pinfo[2], pinfo[3], pinfo[6], "", df.format(Stage.sum) };
+	String bcap[] = "결제하기,취소".split(",");
+	JLabel check;
+
+	public Purchase(String seats, String discounts) {
+		super("결제", 300, 320);
+		var c = new JPanel();
+		c.setLayout(new BoxLayout(c, BoxLayout.Y_AXIS));
+		var c_s = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		var s = new JPanel(new GridLayout(0, 1, 5, 5));
+
+		for (int i = 0; i < cap_w.length; i++) {
+			if (i != 3) {
+				var tmp = new JPanel(new BorderLayout());
+				tmp.add(lbl(cap_w[i], JLabel.LEFT));
+				tmp.add(lbl(cap_e[i], JLabel.RIGHT), "East");
+			} else {
+				var tmp = new JPanel(new BorderLayout());
+				var tmp_c = new JPanel(new GridLayout(0, 1));
+				tmp.add(lbl(cap_w[i], JLabel.LEFT), "West");
+				tmp.add(tmp_c);
+				for (int j = 0; j < seats.split("#").length; j++) {
+					tmp_c.add(lbl(seats.split("#")[j], JLabel.RIGHT));
+				}
+				c.add(tmp);
+				tmp.setBorder(new MatteBorder(1, 0, 1, 0, Color.LIGHT_GRAY));
+			}
+		}
+		c.add(c_s);
+		c_s.add(btn("본인인증", a -> {
+			String result = JOptionPane.showInputDialog("비밀번호를 입력해주세요.");
+			System.out.println(result);
+		}));
+		c_s.add(check = lbl("", JLabel.CENTER));
+
+		for (var bcap : "결제하기,취소".split(",")) {
+			s.add(btn(bcap, a -> {
+
+			}));
+		}
+
+		add(s, "South");
+		check.setForeground(Color.GREEN);
+
+	}
+
+}

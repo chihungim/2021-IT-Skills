@@ -1,0 +1,13 @@
+package view;
+
+import java.sql.Connection;
+import java.sql.Statement;
+
+import javax.swing.JFrame;
+
+import db.DB;
+
+public class BaseFrame extends JFrame {
+	static Connection con = DB.con;
+	static Statement stmt = db.DB.stmt;
+}

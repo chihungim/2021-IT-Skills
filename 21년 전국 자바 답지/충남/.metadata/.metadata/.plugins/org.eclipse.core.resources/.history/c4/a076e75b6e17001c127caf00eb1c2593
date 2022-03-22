@@ -1,0 +1,159 @@
+package Ãæ³²;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+
+public class BaseFrame extends JFrame {
+
+	JPanel c, w, e, s, n;
+	static int sno;
+	static String uno = "", uname, sname;
+	static int ubirth, uage;
+
+	static Connection con = DB.con;
+	static Statement stmt = DB.stmt;
+	//
+	static ArrayList<String> metroNames = new ArrayList<String>();
+	static ArrayList<String> stNames = new ArrayList<String>();
+	static Object metroStInfos[][] = new Object[30 + 1][4];
+	static int adjDim[][] = new int[275 + 1][275 + 1];
+	static int lineDim[][] = new int[275 + 1][275 + 1];
+	static int metroTimeDim[][][] = new int[30 + 1][100][300];
+	int INF = 10000000;
+	ResultSet rs;
+
+	static {
+		try {
+			stmt.execute("use metro");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public BaseFrame(String tit, int w, int h) {
+		super("¼­¿ï¸ÞÆ®·Î - " + tit);
+		this.setSize(w, h);
+		this.setLocationRelativeTo(null);
+		this.setDefaultCloseOperation(2);
+	}
+
+	void datainit() throws SQLException {
+		rs = stmt.executeQuery("select * from station");
+		stNames.add("");
+
+		while (rs.next()) {
+			stNames.add(rs.getString(2));
+
+			for (int i = 1; i <= 30; i++) {
+				metroStInfos[i][0] = new ArrayList<String>();
+				var info = ((ArrayList) metroStInfos[i][0]);
+				info.add("");
+				rs = stmt.executeQuery(
+						"select s.name from route r, station s where r.metro = " + i + " and r.station = s.serial");
+				while (rs.next()) {
+					info.add(rs.getString(1));
+				}
+			}
+		}
+	}
+
+	String tformat(LocalTime t, String format) {
+		return DateTimeFormatter.ofPattern(format).format(t);
+	}
+
+	static <T extends JComponent> T sz(T c, int w, int h) {
+		c.setPreferredSize(new Dimension(w, h));
+		return c;
+	}
+
+	static void eMsg(String msg) {
+		JOptionPane.showMessageDialog(null, msg, "°æ°í", JOptionPane.ERROR_MESSAGE);
+	}
+
+	static void iMsg(String msg) {
+		JOptionPane.showMessageDialog(null, msg, "Á¤º¸", JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	static JLabel lbl(String text, int alig) {
+		JLabel l = new JLabel(text, alig);
+		return l;
+	}
+
+	static JLabel lbl(String text, int alig, int size) {
+		JLabel l = new JLabel(text, alig);
+		l.setFont(new Font("¸¼Àº °íµñ", Font.BOLD, size));
+		return l;
+	}
+
+	static JLabel lblP(String text, int alig, int size) {
+		JLabel l = new JLabel(text, alig);
+		l.setFont(new Font("¸¼Àº °íµñ", Font.PLAIN, size));
+		return l;
+	}
+
+	static JLabel lbl(String text, int alig, int size, Color col) {
+		JLabel l = new JLabel(text, alig);
+		l.setFont(new Font("¸¼Àº °íµñ", Font.BOLD, size));
+		return l;
+	}
+
+	static JLabel lblP(String text, int alig, int size, Color col) {
+		JLabel l = new JLabel(text, alig);
+		l.setFont(new Font("¸¼Àº °íµñ", Font.PLAIN, size));
+		return l;
+	}
+
+	static JButton btn(String text, ActionListener a) {
+		JButton b = new JButton(text);
+		b.addActionListener(a);
+		b.setBackground(new Color(50, 100, 255));
+		b.setForeground(Color.white);
+		return b;
+	}
+
+	static void setLine(JComponent c) {
+		c.setBorder(new LineBorder(Color.black));
+	}
+
+	static void setLine(JComponent c, Color col) {
+		c.setBorder(new LineBorder(col));
+	}
+
+	static void setEmpty(JComponent c, int t, int l, int b, int r) {
+		c.setBorder(new EmptyBorder(t, l, b, r));
+	}
+
+	static ImageIcon img(String path, int w, int h) {
+		return new ImageIcon(Toolkit.getDefaultToolkit().getImage("./Áö±ÞÀÚ·á/images/" + path).getScaledInstance(w, h,
+				Image.SCALE_SMOOTH));
+	}
+
+	static int rei(Object obj) {
+		if (obj.toString().isEmpty())
+			return 0;
+		return Integer.parseInt(obj.toString());
+	}
+
+}

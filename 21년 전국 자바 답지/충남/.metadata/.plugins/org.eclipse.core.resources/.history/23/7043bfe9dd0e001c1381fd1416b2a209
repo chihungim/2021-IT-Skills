@@ -1,0 +1,8 @@
+package view;
+
+public class MyPage extends BaseFrame {
+	public MyPage() {
+		super("Mypage", 780, 280);
+		setVisible(true);
+	}
+}

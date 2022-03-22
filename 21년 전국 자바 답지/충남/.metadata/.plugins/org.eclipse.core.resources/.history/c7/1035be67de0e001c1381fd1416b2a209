@@ -1,0 +1,17 @@
+package view;
+
+import java.awt.Color;
+
+public class Chart extends BaseFrame {
+	Color col[] = { Color.BLACK, Color.BLUE, Color.RED, Color.green, Color.YELLOW };
+
+	public Chart() {
+		super("놀이기구 인기순위 TOP5", 850, 450);
+		ui();
+		setVisible(true);
+	}
+
+	void ui() {
+
+	}
+}
